@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class WaitingRoom {
-    Queue<Customer> sofa = new LinkedList<>();
+    public Queue<Customer> sofa = new LinkedList<>();
 
     public synchronized void enqueue(Customer customer) {
         if (sofa.size() < 5) {
