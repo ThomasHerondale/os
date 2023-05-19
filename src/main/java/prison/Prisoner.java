@@ -16,12 +16,18 @@ public class Prisoner extends Thread {
 
     @Override
     public void run() {
-        prison.yardTime(this);
+        prison.startYardTime(this);
+        try {
+            Thread.sleep((int) (Math.random() * Prison.yard_time));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        prison.endYardTime(this);
     }
 
     @Override
     public String toString() {
-        return getName();
+        return getName() + "(" + type + ")";
     }
 
     @Override

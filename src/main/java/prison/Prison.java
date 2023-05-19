@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static prison.PrisonerType.*;
+
 public class Prison {
     List<Prisoner> yard = new ArrayList<>();
     static final long yard_time = 3000;
 
-    public synchronized void yardTime(Prisoner prisoner) {
-        System.out.println(prisoner + " tries to enter.");
+    public synchronized void startYardTime(Prisoner prisoner) {
         while (!canEnter(prisoner)) {
             try {
                 System.err.println(prisoner + " cannot enter yard and is waiting.");
@@ -21,29 +22,32 @@ public class Prison {
 
         System.out.println(prisoner + " is entering yard.");
         yard.add(prisoner);
+    }
 
-        try {
-            Thread.sleep(yard_time);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
+    public synchronized void endYardTime(Prisoner prisoner) {
         System.out.println(prisoner + " has finished his yard time.");
         yard.remove(prisoner);
         notifyAll();
     }
 
     private boolean canEnter(Prisoner prisoner) {
-        Integer[] clanCount = new Integer[3];
-        Arrays.fill(clanCount, 0);
+        if (prisoner.type == COMMON)
+            return true;
+
+        int yakuza_count = 0, mafia_count = 0;
         for (var inYard : yard) {
-            clanCount[inYard.type.ordinal()]++;
+           if (inYard.type == MAFIA)
+               mafia_count++;
+           else
+               yakuza_count++;
         }
-        var futureCount = clanCount[prisoner.type.ordinal()] + 1;
-        for (int i = 1; i < clanCount.length; i++) {
-            if (Math.abs(clanCount[i] - futureCount) > 1)
-                return false;
-        }
-        return true;
+        if (prisoner.type == MAFIA)
+            mafia_count++;
+        else
+            yakuza_count++;
+
+        System.out.println("Y: " + yakuza_count + " - M: " + mafia_count);
+
+        return Math.abs(yakuza_count - mafia_count) < 1;
     }
 }

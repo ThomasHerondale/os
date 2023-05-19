@@ -10,7 +10,7 @@ public class Main {
 
         Prisoner[] prisoners = new Prisoner[50];
         for (int i = 0; i < prisoners.length; i++) {
-            var type = PrisonerType.values()[rng.nextInt(2)];
+            var type = PrisonerType.values()[rng.nextInt(3)];
             prisoners[i] = new Prisoner(i, type, prison);
             prisoners[i].start();
 
